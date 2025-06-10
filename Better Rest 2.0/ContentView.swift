@@ -107,6 +107,7 @@ struct ContentView: View {
                                 calcBedTime()
                             }
                     }
+                    // When any of those values change, we performt the function in closure
                     .onChange(of: wakeUp){ _ in calcBedTime()}
                     .onChange(of: coffeeAmount){ _ in calcBedTime()}
                     .onChange(of: sleepAmount){ _ in calcBedTime()}
@@ -148,8 +149,10 @@ struct ContentView: View {
             let config = MLModelConfiguration()
             let model = try BetterRest(configuration: config)
             
-            let component = Calendar.current.dateComponents([.hour, .minute], from: wakeUp)
+            // CoreML can throw 2 errors. Either while creating a model or while predicting. so we use Do Try Catch
             
+            let component = Calendar.current.dateComponents([.hour, .minute], from: wakeUp)
+            // This is used to get the hour and minute components of wakeUp
             let hour = (component.hour ?? 0) * 60 * 60
             let minute = (component.minute ?? 0) * 60
             
